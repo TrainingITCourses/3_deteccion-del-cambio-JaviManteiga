@@ -1,0 +1,6 @@
+<div style="clear:both">
+  <select (change)="search.emit($event.target.value)">
+    <option value="-1">Seleccione una opción</option>
+    <option [value]="item.id" *ngFor="let item of itemList">{{ item.name }}</option>
+  </select>
+</div>

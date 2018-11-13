@@ -1,0 +1,6 @@
+<div>
+  <app-search-filter-type (selectFilterType)="onSelectFilterType($event)"></app-search-filter-type>
+  <app-search-filter [itemList]="listToShow" (search)="onSearch($event)"></app-search-filter>
+  <app-launch-results [data]="filteredLaunches"></app-launch-results>
+  <app-launch-results-count [count]="filteredLaunches.length"></app-launch-results-count>
+</div>

@@ -1,0 +1,16 @@
+<div style="height: 30px;">
+  <div style="clear:both;float:left;">
+    <input type="radio" id="estado" name="filterType" value="estado" (click)="selectFilterType.emit($event.target.value)">
+    <label for="estado">Estado</label>
+  </div>
+
+  <div style="float:left;">
+    <input type="radio" id="agencia" name="filterType" value="agencia" (click)="selectFilterType.emit($event.target.value)">
+    <label for="agencia">Agencia</label>
+  </div>
+
+  <div style="float:left;">
+    <input type="radio" id="tipo" name="filterType" value="tipo" (click)="selectFilterType.emit($event.target.value)">
+    <label for="tipo">Tipo</label>
+  </div>
+</div>
