@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
+
 // 'https://launchlibrary.net/1.4/launch/1950-01-01?limit=2000'
 // environment.url + '/assets/launchlibrary.json'
 @Injectable({
@@ -12,24 +14,16 @@ export class ApiService {
   public launches: any[];
   public statuses: any[];
   private key = 'launches';
-  constructor(private http: HttpClient) {
-    const launches = localStorage.getItem(this.key);
-    if (launches) {
-      this.launches = JSON.parse(launches);
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      const launches = localStorage.getItem(this.key);
+      if (launches) {
+        this.launches = JSON.parse(launches);
+      } else {
+        this.loadLaunches();
+      }
     }
   }
-
-  public getLaunches = (): Observable<any[]> => {
-    return this.http
-      .get(environment.url + '/assets/data/launches.json')
-      .pipe(
-        map((res: any) => res.launches),
-        tap(res => (this.launches = res)),
-        tap(res =>
-          localStorage.setItem(this.key, JSON.stringify(this.launches))
-        )
-      );
-  };
 
   public getAgencies = (): Observable<any[]> =>
     this.http
@@ -65,5 +59,19 @@ export class ApiService {
         break;
     }
     return statusType;
+  };
+
+  private loadLaunches = (): void => {
+    this.http
+      .get(environment.url + '/assets/data/launches.json')
+      .pipe(
+        map((res: any) => res.launches),
+      ).subscribe(res => {
+        this.launches = res;
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem(this.key, JSON.stringify(this.launches));
+        }
+      }
+      );
   };
 }

@@ -19,7 +19,7 @@ import { LaunchResultsCountComponent } from './shared/launch-results-count/launc
     LaunchResultsCountComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule
   ],
   providers: [],
